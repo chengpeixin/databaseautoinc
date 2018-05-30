@@ -66,8 +66,10 @@ const Book = mongoose.model('higashinokeigo', BookSchema);
   // 读取并重新储存
   await fs.readFile(path.resolve(__dirname, "data.json"), 'utf-8', (err, data) => {
     data = JSON.parse(data)
-    // console.log(data.length)
-    data.forEach(function (v, i) {
+    Book.remove({}, err => {
+      console.log('清空集合成功')
+    })
+    data.forEach(async (v, i) => {
       delete v._id;
       delete v.id;
       delete v.bookId;
@@ -79,13 +81,14 @@ const Book = mongoose.model('higashinokeigo', BookSchema);
         text: v.text
       }
       var bookdata = new Book(json)
-      bookdata.save(err => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log('success')
-        }
-      })
+      var {
+        err
+      } = await bookdata.save()
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(`储存第${i + 1}条成功`)
+      }
     }, this);
   })
 })()
