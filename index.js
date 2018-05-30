@@ -46,17 +46,21 @@ const Book = mongoose.model('higashinokeigo', BookSchema);
 (async () => {
   var data = await Book.find({});
   var datas = []
-  // await data.forEach((v, i) => {
-  //   delete v.id
-  //   delete v._id
-  //   delete v.bookId
-  // })
+  await data.forEach((v, i) => {
+    delete v.id
+    delete v._id
+    delete v.bookId
+    let text = v.text
+    text.forEach((val, ind) => {
+      val['chapterid'] = ind + 1;
+    })
+  })
   // 储存file
   // await fs.writeFile('data.json', JSON.stringify(data), err => {
   //   if (err) {
   //     console.log(err)
   //   } else {
-  //     console.log('哈哈')
+  //     console.log('储存完成')
   //   }
   // })
   // 读取并重新储存
@@ -79,11 +83,10 @@ const Book = mongoose.model('higashinokeigo', BookSchema);
         if (err) {
           console.log(err)
         } else {
-          // console.log('success')
+          console.log('success')
         }
       })
     }, this);
-    console.log('ok')
   })
 })()
 
